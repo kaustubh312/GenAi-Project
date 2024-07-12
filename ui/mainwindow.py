@@ -12,7 +12,7 @@ import pyttsx3
 import threading
 
 # Set up your Gemini API key for genai
-API_KEY = "AIzaSyBcmBIN4RyFzqJIBsVJotWuYpNrK5C1xBY"
+API_KEY = ""
 genai.configure(api_key=API_KEY)
 
 # Initialize generative model
