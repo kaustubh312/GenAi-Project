@@ -1,0 +1,39 @@
+QWidget {
+    background-color: #F0F2F5;
+    font-family: Arial;
+}
+QLabel {
+    font-size: 16px;
+    color: #333;
+}
+QTextEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #CED4DA;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+QPushButton {
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+QPushButton#sendButton {
+    background-color: #DC3545;
+}
+QPushButton#sendButton:hover {
+    background-color: #C82333;
+}
+QPushButton#speakButton {
+    background-color: #007BFF;
+}
+QPushButton#speakButton:hover {
+    background-color: #0056B3;
+}
+QFrame {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
