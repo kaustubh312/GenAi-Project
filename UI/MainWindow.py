@@ -1,18 +1,19 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit, QPushButton, QFrame, QHBoxLayout
-from PyQt5.QtCore import Qt, QTimer, pyqtSlot
-from PyQt5.QtGui import QPixmap, QImage
-from PIL import Image
+import sys
 import cv2
-import time
-import asyncio
-from qasync import asyncSlot
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 import google.generativeai as genai
+import asyncio
+from qasync import QEventLoop, asyncSlot
+from PIL import Image
 import speech_recognition as sr
 import pyttsx3
 import threading
+import time
 
 # Set up your Gemini API key for genai
-API_KEY = "AIzaSyBcmBIN4RyFzqJIBsVJotWuYpNrK5C1xBY"
+API_KEY = ""
 genai.configure(api_key=API_KEY)
 
 # Initialize generative model
@@ -43,7 +44,8 @@ class MainWindow(QWidget):
         self.start_video_capture()
 
     def initUI(self):
-        self.setStyleSheet(open('ui/styles.qss').read())
+        with open('UI/styles.qss', 'r') as f:
+            self.setStyleSheet(f.read())
 
         main_layout = QVBoxLayout(self)
 
@@ -158,9 +160,13 @@ class MainWindow(QWidget):
                 self.answer_edit.clear()
                 self.answer_edit.append(f"AI Response: {response}")
 
-                # Use TTS to speak the response
+                # Use TTS to speak the response after displaying it
                 self.tts_engine.say(response)
                 self.tts_engine.runAndWait()
+
+                # Re-enable buttons after speaking
+                self.send_button.setEnabled(True)
+                self.speech_button.setEnabled(True)
 
             except Exception as e:
                 print(f"Failed to generate content: {e}")
@@ -193,7 +199,7 @@ class MainWindow(QWidget):
         self.webcam_response_edit.append(f"AI Response: {response}")
 
     def on_send_button_clicked(self):
+        # Disable buttons during AI processing
+        self.send_button.setEnabled(False)
+        self.speech_button.setEnabled(False)
         asyncio.ensure_future(self.capture_question())
-
-# Other utility functions and main loop if needed
-

@@ -23,13 +23,21 @@ QPushButton {
 QPushButton#sendButton {
     background-color: #DC3545;
 }
-QPushButton#sendButton:hover {
+QPushButton#sendButton:disabled {
+    background-color: #D3D3D3;  /* Light gray */
+    color: #A9A9A9;  /* Darker gray for text */
+}
+QPushButton#sendButton:hover:!disabled {
     background-color: #C82333;
 }
 QPushButton#speakButton {
     background-color: #007BFF;
 }
-QPushButton#speakButton:hover {
+QPushButton#speakButton:disabled {
+    background-color: #D3D3D3;  /* Light gray */
+    color: #A9A9A9;  /* Darker gray for text */
+}
+QPushButton#speakButton:hover:!disabled {
     background-color: #0056B3;
 }
 QFrame {
