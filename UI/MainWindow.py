@@ -134,7 +134,8 @@ class MainWindow(QWidget):
                     response = model.generate_content(["Describe what is happening in front of the camera.", image_pil]).parts[0].text
                     timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
                     self.interaction_memory.append({'timestamp': timestamp, 'description': response})
-                    self.loop.call_soon_threadsafe(self.update_webcam_response, response)
+                    # Schedule the coroutine to be run on the main thread
+                    QMetaObject.invokeMethod(self, "update_webcam_response", Qt.QueuedConnection, Q_ARG(str, response))
                 except Exception as e:
                     print(f"Failed to generate content: {e}")
                 time.sleep(2)  # Adjust the delay as needed for video processing
@@ -173,18 +174,26 @@ class MainWindow(QWidget):
 
     @asyncSlot()
     async def speech_to_text(self):
-        with sr.Microphone() as source:
-            print("Listening for question...")
-            audio = self.recognizer.listen(source)
+        def recognize_speech():
+            with sr.Microphone() as source:
+                print("Listening for question...")
+                audio = self.recognizer.listen(source)
 
-        try:
-            question = self.recognizer.recognize_google(audio)
+            try:
+                return self.recognizer.recognize_google(audio)
+            except sr.UnknownValueError:
+                return None
+            except sr.RequestError as e:
+                print(f"Could not request results; {e}")
+                return None
+
+        # Run the speech recognition in a separate thread
+        question = await self.loop.run_in_executor(None, recognize_speech)
+        if question:
             self.question_edit.setPlainText(question)
             await self.capture_question()
-        except sr.UnknownValueError:
+        else:
             print("Could not understand audio")
-        except sr.RequestError as e:
-            print(f"Could not request results; {e}")
 
     def update_webcam_feed(self):
         ret, frame = self.cap.read()
@@ -193,8 +202,8 @@ class MainWindow(QWidget):
             frame = QImage(frame.data, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
             self.label.setPixmap(QPixmap.fromImage(frame))
 
-    @asyncSlot()
-    async def update_webcam_response(self, response):
+    @pyqtSlot(str)
+    def update_webcam_response(self, response):
         self.webcam_response_edit.clear()
         self.webcam_response_edit.append(f"AI Response: {response}")
 
