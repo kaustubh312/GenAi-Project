@@ -11,6 +11,7 @@ import speech_recognition as sr
 import pyttsx3
 import threading
 import time
+import numpy as np
 
 # Set up your Gemini API key for genai
 API_KEY = ""
@@ -115,7 +116,7 @@ class MainWindow(QWidget):
 
         self.setLayout(main_layout)
         self.setGeometry(100, 100, 1280, 960)
-        self.setWindowTitle('Vision AI - Real-time Webcam App')
+        self.setWindowTitle('Visionverse AI - Real-time Webcam App')
 
         # Connect button click events to functions
         self.send_button.clicked.connect(self.on_send_button_clicked)
@@ -134,6 +135,9 @@ class MainWindow(QWidget):
                     response = model.generate_content(["Describe what is happening in front of the camera.", image_pil]).parts[0].text
                     timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
                     self.interaction_memory.append({'timestamp': timestamp, 'description': response})
+                    # Ensure the list does not grow indefinitely
+                    if len(self.interaction_memory) > 100:
+                        self.interaction_memory.pop(0)
                     # Schedule the coroutine to be run on the main thread
                     QMetaObject.invokeMethod(self, "update_webcam_response", Qt.QueuedConnection, Q_ARG(str, response))
                 except Exception as e:
@@ -212,3 +216,9 @@ class MainWindow(QWidget):
         self.send_button.setEnabled(False)
         self.speech_button.setEnabled(False)
         asyncio.ensure_future(self.capture_question())
+
+    def closeEvent(self, event):
+        # Release the video capture when the window is closed
+        if self.cap.isOpened():
+            self.cap.release()
+        event.accept()

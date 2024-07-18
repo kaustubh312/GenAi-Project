@@ -40,6 +40,16 @@ QPushButton#speakButton:disabled {
 QPushButton#speakButton:hover:!disabled {
     background-color: #0056B3;
 }
+QPushButton#refreshButton {
+    background-color: #28A745;
+}
+QPushButton#refreshButton:disabled {
+    background-color: #D3D3D3;  /* Light gray */
+    color: #A9A9A9;  /* Darker gray for text */
+}
+QPushButton#refreshButton:hover:!disabled {
+    background-color: #218838;
+}
 QFrame {
     background-color: #FFFFFF;
     border-radius: 10px;
