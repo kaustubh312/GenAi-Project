@@ -1,0 +1,7 @@
+PyQt5
+opencv-python
+google-generativeai
+qasync
+Pillow
+SpeechRecognition
+pyttsx3
