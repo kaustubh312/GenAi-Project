@@ -14,7 +14,7 @@ import time
 import numpy as np
 
 # Set up your Gemini API key for genai
-API_KEY = "AIzaSyBcmBIN4RyFzqJIBsVJotWuYpNrK5C1xBY"
+API_KEY = ""
 genai.configure(api_key=API_KEY)
 
 # Initialize generative model
@@ -51,12 +51,6 @@ class MainWindow(QWidget):
             self.setStyleSheet(f.read())
 
         main_layout = QVBoxLayout(self)
-        # main_layout = QHBoxLayout(self)
-        # main_layout = QGridLayout(self)
-        # main_layout.addWidget(4, 1)
-        # main_layout = QBoxLayout(QBoxLayout.TopToBottom, self)
-        # spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        # main_layout.addItem(spacer)
 
         # Webcam section
         webcam_frame = QFrame(self)
